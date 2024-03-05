@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .question {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .result {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            display: block;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div ng-controller="QuizController as quiz">
+        <h1>Interactive Quiz</h1>
+        <div class="question" ng-show="quiz.currentQuestion">
+            <p>
+In which decade was the American Institute of Electrical Engineers (AIEE) founded?</p>
+            <ul>
+                <li ng-repeat="option in quiz.currentQuestion.options">
+                    <label>
+                        <input type="radio" ng-model="quiz.selectedOption" ng-value="option">1880s
+                        <ul>
+                    </label>
+                </li>
+            </ul>
+            <button ng-click="quiz.checkAnswer()" ng-disabled="!quiz.selectedOption">Next</button>
+        </div>
+        <div class="result" ng-show="quiz.showResult">
+            <h2>Result</h2>
+            <p>You got {{ quiz.score }} out of {{ quiz.totalQuestions }} questions correct!</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        angular.module('quizApp', ['ngAnimate'])
+            .controller('QuizController', function($scope, $timeout) {
+                var quiz = this;
+
+                quiz.questions = [
+                    {
+                        text: "In which decade was the American Institute of Electrical Engineers (AIEE) founded?",
+                        options: ["1850s", "1880s", "1930s"],
+                        correctAnswer: "Paris"
+                    },
+                    {
+                        text: "What is the largest planet in our solar system?",
+                        options: ["Mars", "Saturn", "Jupiter"],
+                        correctAnswer: "Jupiter"
+                    },
+                    {
+                        text: "Who wrote 'To Kill a Mockingbird'?",
+                        options: ["Harper Lee", "Stephen King", "J.K. Rowling"],
+                        correctAnswer: "Harper Lee"
+                    }
+                ];
+
+                quiz.currentQuestionIndex = 0;
+                quiz.currentQuestion = quiz.questions[quiz.currentQuestionIndex];
+                quiz.score = 0;
+                quiz.totalQuestions = quiz.questions.length;
+                quiz.showResult = false;
+
+                quiz.checkAnswer = function() {
+                    if (quiz.selectedOption === quiz.currentQuestion.correctAnswer) {
+                        quiz.score++;
+                    }
+
+                    quiz.selectedOption = null;
+
+                    if (quiz.currentQuestionIndex < quiz.totalQuestions - 1) {
+                        quiz.currentQuestionIndex++;
+                        quiz.currentQuestion = quiz.questions[quiz.currentQuestionIndex];
+                    } else {
+                        quiz.showResult = true;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>
