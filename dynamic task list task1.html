@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="taskManagerApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Task List Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .task-list {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .task-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .task-item input[type="text"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .task-item button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .task-item button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div ng-controller="TaskManagerController as taskCtrl">
+        <div class="task-list">
+            <div class="task-item" ng-repeat="task in taskCtrl.tasks">
+                <input type="text" ng-model="task.name" ng-disabled="task.editing">
+                <button ng-click="taskCtrl.editTask(task)" ng-show="!task.editing">Edit</button>
+                <button ng-click="taskCtrl.saveTask(task)" ng-show="task.editing">Save</button>
+                <button ng-click="taskCtrl.deleteTask($index)">Delete</button>
+            </div>
+            <div class="task-item">
+                <input type="text" ng-model="taskCtrl.newTask" placeholder="Enter task">
+                <button ng-click="taskCtrl.addTask()">Add Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AngularJS Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <script>
+        angular.module('taskManagerApp', [])
+            .controller('TaskManagerController', function() {
+                var vm = this;
+
+                
+                vm.tasks = [
+                    { name: 'Task 1', editing: false },
+                    { name: 'Task 2', editing: false },
+                    { name: 'Task 3', editing: false }
+                ];
+
+                vm.addTask = function() {
+                    if (vm.newTask) {
+                        vm.tasks.push({ name: vm.newTask, editing: false });
+                        vm.newTask = '';
+                    }
+                };
+
+                vm.deleteTask = function(index) {
+                    vm.tasks.splice(index, 1);
+                };
+
+                vm.editTask = function(task) {
+                    task.editing = true;
+                    task.originalName = task.name;
+                };
+
+                vm.saveTask = function(task) {
+                    task.editing = false;
+                    if (!task.name.trim()) {
+                        task.name = task.originalName;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>
