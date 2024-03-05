@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="imageGalleryApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>view of chennai</title>
+    <style>
+        .image-container {
+            display: inline-block;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img {
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .details {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .details h2 {
+            font-size: 20px;
+        }
+
+        .details p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .details button {
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .move {
+            transform: scale(1.1); /* Example animation: Increase size */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        angular.module('imageGalleryApp', [])
+            .controller('GalleryController', function($scope) {
+                $scope.images = [
+                    { src: 'https://qph.cf2.quoracdn.net/main-qimg-656f446318c44c768d227c3d3e161b85.webp', title: 'Image 1', description: 'MARINA' },
+                    { src: 'https://qph.cf2.quoracdn.net/main-qimg-489f524ff4b42682fb773a9b97e0fcc9-c', title: 'Image 2', description: 'KATHIPARA JUNCTION' },
+                    { src: 'https://worldarchitecture.org/files/bin/?file=1-616.jpg', title: 'Image 3', description: 'AIRPORT' }
+                    // Add more images as needed
+                ];
+
+                $scope.showDetails = function(image) {
+                    $scope.selectedImage = image;
+                };
+
+                $scope.closeDetails = function() {
+                    $scope.selectedImage = null;
+                };
+            });
+    </script>
+</head>
+<body>
+    <div ng-controller="GalleryController">
+        <div class="image-container" ng-repeat="image in images" ng-click="showDetails(image)" ng-class="{ 'move': selectedImage == image }">
+            <img ng-src="{{image.src}}" alt="{{image.title}}">
+        </div>
+        <div class="details" ng-show="selectedImage">
+            <h2>{{selectedImage.title}}</h2>
+            <p>{{selectedImage.description}}</p>
+            <button ng-click="closeDetails()">Close</button>
+        </div>
+    </div>
+</body>
+</html>

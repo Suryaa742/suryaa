@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="weatherApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .weather-info {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .city {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .temperature {
+            font-size: 48px;
+        }
+
+        .description {
+            font-size: 18px;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        angular.module('weatherApp', [])
+            .controller('WeatherController', function($scope, $http) {
+                var API_KEY = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+                var API_URL = 'https://openweathermap.org/weathermap?basemap=map&cities=true&layer=temperature&lat=30&lon=-20&zoom=5' + API_KEY + '&units=metric';
+
+                $http.get(API_URL)
+                    .then(function(response) {
+                        $scope.weatherData = response.data;
+                    })
+                    .catch(function(error) {
+                        $scope.error = "Error fetching weather data";
+                        console.error('Error fetching weather data:', error);
+                    });
+            });
+    </script>
+</head>
+<body>
+    <div ng-controller="WeatherController">
+        <h1>Real-time Weather App</h1>
+        <div class="weather-info">
+            <div class="city">{{ weatherData.name }}</div>
+            <div class="temperature">{{ weatherData.main.temp }}°C</div>
+            <div class="description">{{ weatherData.weather[0].description }}</div>
+        </div>
+        <div class="error" ng-if="error">{{ error }}</div>
+    </div>
+</body>
+</html>
